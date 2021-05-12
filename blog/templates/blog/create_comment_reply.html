@@ -1,0 +1,15 @@
+{% extends "blog/base.html" %}
+{% block content %}
+
+<div class="w3-card w3-padding w3-margin w3-white w3-container w3-round">
+    <h4>Add reply to :{{replying_on.body}}</h4>
+    <h5>Reply:</h5>
+    <form method="POST" action="">
+        {% csrf_token %}
+        {{form.body}}
+        <br />
+        <input class="w3-button w3-border w3-round w3-center w3-hover-light-grey" type="submit" value="Reply">
+    </form>
+</div>
+
+{% endblock %}

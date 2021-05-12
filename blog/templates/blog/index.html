@@ -1,0 +1,76 @@
+{% extends "blog/base.html" %}
+{% block content %}
+
+
+        {% for message in messages %}
+        <div class="w3-panel w3-card w3-padding-16 w3-margin w3-white w3-display-container w3-round">
+            <span onclick="this.parentElement.style.display='none'" class="w3-button w3-large w3-display-right">&times;</span>
+            {{ message }}
+        </div>
+        {% endfor %}
+
+
+<div class="w3-card w3-margin w3-padding w3-white w3-container w3-round">
+    <form method="get">
+        <div style="display:flex;justify-content:space-between;">
+            <input style="width:100%; margin-right:10px;" type="text" name="search-blog-post" value="{{search_input}}" placeholder="Search">
+            <input class="w3-button w3-border w3-round w3-center w3-hover-light-grey" type="submit" value="Search">
+        </div>
+    </form>
+</div>
+
+
+<div class="w3-card w3-margin w3-white w3-container w3-round">
+{% for post in page_obj %}
+    <h5>{{post.title}}</h5>
+    <p>
+        {{post.body|safe|truncatewords:30}}
+        <a href="{% url 'blog:detail' post.id %}">Read more</a>
+    </p>
+    <br/>
+{% endfor %}
+</div>
+
+
+{% if page_obj.has_other_pages %}
+<div style="display:flex;justify-content:center;">
+<div class="w3-card w3-white w3-margin w3-bar w3-round w3-padding">
+<ul>
+    {% if page_obj.has_previous %}
+        <li class="w3-button"><a href="?page={{page_obj.previous_page_number}}">&laquo;</a></li>
+    {% else %}
+        <li class="w3-button w3-disabled"><span>&laquo;</span></li>
+    {% endif %}
+    
+    {% for i in page_obj.paginator.page_range %}
+        {% if i == page_obj.number %}
+            <li class="active w3-button w3-light-gray"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+        {% else %}
+            <li class="w3-button">{{ i }}</li>
+            <!-- <a href="?page{{ i }}"> </a>-->
+        {% endif %}
+    {% endfor %}
+    
+    {% if page_obj.has_next %}
+        <li class="w3-button"><a href="?page={{page_obj.next_page_number}}">&raquo;</a></li>
+    {% else %}
+        <li class="w3-button w3-disabled"><span>&raquo;</span></li>
+    {% endif %}
+</ul>
+</div>
+</div>
+
+
+<div class="w3-card w3-margin w3-padding w3-white w3-container w3-round">
+    <h3>Categories</h3>
+    {% for category in categories %}
+        <ul>
+            <li><a href="{% url 'blog:category_post' category %}">{{category.category}}</a></li>
+        </ul>
+    {% endfor %}
+</div>
+
+{% endif %}
+
+
+{% endblock %}

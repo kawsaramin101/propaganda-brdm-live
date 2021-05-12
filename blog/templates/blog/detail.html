@@ -1,0 +1,100 @@
+{% extends "blog/base.html" %}
+{% block content %}
+<div class="w3-card-4 w3-margin w3-white w3-container w3-round-large">
+
+        {% for message in messages %}
+        <div class="w3-panel w3-card w3-padding-16 w3-margin w3-white w3-display-container w3-round">
+            <span onclick="this.parentElement.style.display='none'" class="w3-button w3-large w3-display-right">&times;</span>
+            {{ message }}
+        </div>
+        {% endfor %}
+
+
+    <h4>{{blog.title}}</h4>
+    <p>
+        <a href="{% url 'user:profile' blog.author.id %}">{{blog.author}}</a> || {{blog.date_created}}
+    </p>
+    <p>
+        Posted in: {% for cate in blog.category.all %}{{cate}} । {% endfor %}
+    </p>
+    <br />
+    <p>
+        {{blog.body}}
+    </p>
+    <br/>
+    
+    <div style="display:flex;flex-direction:row;">
+    <form action="{% url 'blog:like' blog.id %}" method="POST" style="margin-right:5px;">
+        {% csrf_token %}
+        <button class="w3-btn w3-blue w3-small w3-round" type="submit" name="blog_id" value="{{blog.id}}">
+            {% if is_liked %}
+            Unlike ({{total_likes}})
+            {% else %}
+            Like ({{total_likes}})
+            {% endif %}
+        </button>
+    </form>
+    <form action="{% url 'blog:dislike' blog.id %}" method="POST">
+        {% csrf_token %}
+      
+        <button id="dislike_btn" class="w3-btn w3-blue w3-small w3-round" type="submit" name="blog_id" value="{{blog.id}}">
+            {% if is_disliked %}
+            UnDislike ({{total_dislikes}})
+            {% else %}
+            DisLike ({{total_dislikes}})
+            {% endif %}
+        </button>
+        
+        
+    </form>
+    </div>
+    <hr/>
+    
+    <a href="{% url 'blog:create_comment' blog.id %}">Add Comment</a>
+    <hr/>
+    <div>
+        {% if blog.comments.all %}
+        
+            {% for comment in blog.comments.all %}
+                <h4>{{comment.author}}</h4>
+                <p>
+                    {{comment.body}}
+                </p>
+                <p>
+                    {{comment.date_created}}
+                    <span>  ||  </span>
+                    <a href="{% url 'blog:create_comment_reply' comment.id %}">Reply</a>
+                </p>
+                
+                {% if comment.replies.all %}
+                    
+                    <div style="margin-left:30px;">
+                        <h5>Replies</h5>
+                    {% for reply in comment.replies.all %}
+                        <h6>    {{reply.author}}</h6>
+                        <p>
+                            {{reply.body}}
+                        </p>
+                        <p>
+                            {{reply.date_created}}
+                        </p>
+                    {% endfor %}
+                    </div>
+                {% endif %}  
+                <br/>
+            {% endfor %}
+ 
+            
+        {% else %}
+            <p>No comments</p>
+        {% endif %}
+    </div>
+</div>
+<!--
+<script>
+    var is_liked = "{{is_liked}}"
+    if (is_liked  == True) {
+        document.getElementById("dislike_btn").setAttribute("disabled", "True")
+    }
+</script>  -->
+{% endblock %}

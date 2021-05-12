@@ -1,0 +1,140 @@
+{% extends "blog/base.html" %}
+{% block content %}
+
+
+
+{% for message in messages %}
+<div class="w3-panel w3-card w3-padding-16 w3-margin w3-white w3-display-container w3-round">
+    <span onclick="this.parentElement.style.display='none'" class="w3-button w3-large w3-display-right">&times;</span>
+    {{ message }}
+</div>
+{% endfor %}
+
+
+<div class="w3-card-2 w3-white w3-round w3-margin w3-padding">
+    <div class="w3-center">
+
+        {% if profile.profilepic %}
+        <img src="{{ profile.profilepic.url }}" width="150" height="150" class="w3-circle" />
+        <br />
+        <br />
+        {% endif %}
+
+        <h3>{{ user.first_name }} {{ user.last_name}}</h3>
+
+        {% if profile.bio %}
+        <h6>{{ profile.bio }}</h6>
+        {% endif %}
+    </div>
+
+    <table>
+        <tr>
+            <td>Username:</td>
+            <td>{{ user.username}}</td>
+        </tr>
+        <tr>
+            <td>First Name:</td>
+            <td>{{ user.first_name}}</td>
+        </tr>
+        <tr>
+            <td>Last name:</td>
+            <td>{{ user.last_name }}</td>
+        </tr>
+        <tr>
+            <td>Email:</td>
+            <td>{{user.email}}</td>
+        </tr>
+        <tr>
+            <td>Birthdate:</td>
+            <td>{{profile.birthdate}}</td>
+        </tr>
+        <tr>
+            <td>Total Post:</td>
+            <td>{{total_post}}</td>
+        </tr>
+    </table>
+
+    {% if request.user == user %}
+    <div class="w3-text-brown">
+        <a href="{% url 'blog:create_blog_post' %}">New post</a>
+        <span> । </span>
+        <a href="{% url 'user:edit-profile' %}">Edit profile</a>
+        <span> । </span>
+        <a href="{% url 'user:edit-user' %}">Change Settings</a>
+        <span> । </span>
+        <a href="{% url 'user:password_change' %}">Change Password</a>
+    </div>
+    {% endif %}
+
+    <hr />
+    <h4 class="w3-center">All Posts</h4>
+
+    <div class="tab">
+        <button class="tablinks" onclick="openTab(event, 'published-post')">Published</button>
+        <button class="tablinks" onclick="openTab(event, 'unpublished-post')">Unpublished</button>
+    </div>
+
+    <div id="published-post" class="tabcontent">
+        {% for post in published_post %}
+        <h5>{{post.title}}</h5>
+        <p>
+            {{post.body|safe|truncatewords:30|linebreaks }}
+
+        </p>
+        <span class="w3-left">
+            <a href="{% url 'blog:detail' post.id %}">Read more</a>
+        </span>
+        <span class="w3-right">
+            <a href="{% url 'blog:update-blog-post' post.id %}">Edit</a>
+            <a href="{% url 'blog:delete-blog-post' post.id %}">Delete</a>
+        </span>
+        <br />
+        <hr />
+        {% endfor %}
+    </div>
+
+    <div id="unpublished-post" class="tabcontent">
+        {% for post in unpublished_post %}
+        <h5>{{post.title}}</h5>
+        <p>
+            {{post.body|safe|truncatewords:30|linebreaks }}
+
+        </p>
+        <span class="w3-left">
+            <a href="{% url 'blog:detail' post.id %}">Read more</a>
+        </span>
+        <span class="w3-right">
+            <a href="{% url 'blog:update-blog-post' post.id %}">Edit</a>
+            <a href="{% url 'blog:delete-blog-post' post.id %}">Delete</a>
+        </span>
+        <br />
+        <hr />
+        {% endfor %}
+    </div>
+
+
+</div>
+<script>
+    function openTab(evt, tabName) {
+        
+        var i, tabcontent, tablinks;
+
+       
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+
+   
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+
+        
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.className += " active";
+        
+    }
+</script>
+{% endblock %}

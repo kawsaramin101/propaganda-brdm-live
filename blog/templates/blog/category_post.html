@@ -1,0 +1,18 @@
+{% extends "blog/base.html" %}
+{% block content %}
+
+<div class="w3-card w3-margin w3-white w3-container w3-round">
+<h3>All posts for {{category_name}}</h3>
+<br/>
+
+{% for post in posts %}
+    <h5>{{post.title}}</h5>
+    <p>
+        {{post.body|safe|truncatewords:30}}
+        <a href="{% url 'blog:detail' post.id %}">Read more</a>
+    </p>
+    <br/>
+{% endfor %}
+</div>
+
+{% endblock %}

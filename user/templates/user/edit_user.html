@@ -1,0 +1,39 @@
+{% extends "blog/base.html" %}
+{% block content %}
+
+
+<div class="w3-container w3-card-4 w3-round w3-white">
+    <h3>Edit User</h3>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.errors }}
+        
+        <table>
+            <tr>
+                <td>{{ form.first_name.label }}:</td>
+                <td>{{ form.first_name }}</td>
+            </tr>
+
+            <tr>
+                <td>{{ form.last_name.label }}:</td>
+                <td>{{ form.last_name }}</td>
+            </tr>
+
+            <tr>
+                <td>{{ form.username.label }}:</td>
+                <td>{{ form.username }}</td>
+            </tr>
+            
+            <tr>
+                <td>{{ form.email.label }}:</td>
+                <td>{{ form.email }}</td>
+            </tr>
+        </table>
+        
+        <br/>
+        <input class="w3-button w3-border w3-round w3-center w3-hover-light-grey" type="submit" value="Edit">
+    </form>
+    <br />
+</div>
+
+{% endblock %}
